@@ -1,0 +1,25 @@
+{
+    "name": "pressbooks/pressbooks-stats",
+    "version": "1.0.0",
+    "description": "A Pressbooks plugin which provides some basic activity statistics for a Pressbooks network.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0+",
+    "homepage": "https://github.com/pressbooks/pressbooks-stats",
+    "authors": [
+      {
+        "name": "Book Oven Inc.",
+        "email": "code@pressbooks.com",
+        "homepage": "https://pressbooks.com"
+      }
+    ],
+    "keywords": [
+      "ebooks publishing webbooks stats statistics metrics"
+    ],
+    "support": {
+      "email": "code@pressbooks.com",
+      "issues": "https://github.com/pressbooks/pressbooks-stats/issues",
+      "docs": "https://github.com/pressbooks/pressbooks-stats/wiki"
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}

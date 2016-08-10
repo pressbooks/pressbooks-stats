@@ -1,0 +1,25 @@
+table {
+	margin-left: 0;
+	margin-top: 8em;
+	width: 100%;
+}
+
+table td {
+	padding: 1em;
+}
+
+.visualize {
+	margin-left: 0;
+	margin-top: 2em;
+}
+
+div.executive-summary {
+	margin-top: 2em;
+	padding: 1em;
+	font-size: 13px;
+	border: 1px dashed #ccc;
+}
+
+div.executive-summary p {
+	line-height: .5em;
+}
