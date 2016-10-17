@@ -1,7 +1,8 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 ?>
 
 <div class="wrap">
@@ -17,7 +18,8 @@ if ( ! defined( 'ABSPATH' ) )
 		echo '<h1> &#9733; ' . ( ! empty( $key ) ? ucfirst( $key ) : '...' ) . ': ';
 		echo "{$val['total']} ";
 		echo "<span style='color:#ccc;font-size:small;font-style:italic;'> &middot; Spam: {$val['spam']}";
-		if ( isset( $val['deactivated'] ) ) echo ", Deactivated: {$val['deactivated']} ";
+		if ( isset( $val['deactivated'] ) ) { echo ", Deactivated: {$val['deactivated']} ";
+		}
 		echo ", Real Total: $real_total";
 		echo '</span></h1>';
 	}
@@ -33,7 +35,8 @@ if ( ! defined( 'ABSPATH' ) )
 	<?php
 	$old_users = 0;
 	foreach ( $users_exported_today as $val ) {
-		if ( false == $val['is_new'] ) ++$old_users;
+		if ( false == $val['is_new'] ) { ++$old_users;
+		}
 	}
 	?>
 	<p><strong><?php echo $old_users; ?></strong> users did NOT register in the last 24 hours, did an EXPORT in the last 24 hours.</p>
@@ -64,7 +67,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 			$siteurl = $recent['domain'] . $recent['path'];
 
-			if ( $prev !== false && $prev != $siteurl ) {
+			if ( false !== $prev && $siteurl != $prev ) {
 				$next = true;
 			}
 
@@ -74,15 +77,15 @@ if ( ! defined( 'ABSPATH' ) )
 				ksort( $types );
 
 				?>
-			<tr <?php if ( $j % 2 ) echo 'class="alternate"'; ?> >
-				<td><?php echo $recents[$i - 1]['time']; ?></td>
+			<tr <?php if ( $j % 2 ) { echo 'class="alternate"';} ?> >
+				<td><?php echo $recents[ $i - 1 ]['time']; ?></td>
 				<td>
-					<a href="http://<?php echo $recents[$i - 1]['domain'] . $recents[$i - 1]['path']; ?>"><?php echo $recents[$i - 1]['blogname']; ?></a>
+					<a href="http://<?php echo $recents[ $i - 1 ]['domain'] . $recents[ $i - 1 ]['path']; ?>"><?php echo $recents[ $i - 1 ]['blogname']; ?></a>
 				</td>
 				<td>
-					<?php if ( $recents[$i - 1]['user_id'] != 0 ) { ?>
-					<a href="<?php echo site_url(); ?>/wp-admin/network/users.php?orderby=id&order=DESC&s=<?php echo $recents[$i - 1]['user_login']; ?>"><?php echo $recents[$i - 1]['user_login']; ?></a> |
-					<a href="mailto:<?php echo $recents[$i - 1]['user_email']; ?>"><?php echo $recents[$i - 1]['user_email']; ?></a>
+					<?php if ( 0 != $recents[ $i - 1 ]['user_id'] ) { ?>
+					<a href="<?php echo site_url(); ?>/wp-admin/network/users.php?orderby=id&order=DESC&s=<?php echo $recents[ $i - 1 ]['user_login']; ?>"><?php echo $recents[ $i - 1 ]['user_login']; ?></a> |
+					<a href="mailto:<?php echo $recents[ $i - 1 ]['user_email']; ?>"><?php echo $recents[ $i - 1 ]['user_email']; ?></a>
 					<?php } ?>
 				<td><?php echo implode( ', ', array_keys( $themes ) ); ?></td>
 				<td><?php echo implode( ', ', array_keys( $types ) ); ?></td>
@@ -95,8 +98,8 @@ if ( ! defined( 'ABSPATH' ) )
 				$types = $themes = array();
 			}
 
-			$themes[$recent['theme']] = @++$themes[$recent['theme']];
-			$types[$recent['export_type']] = @++$types[$recent['export_type']];
+			$themes[ $recent['theme'] ] = @++$themes[ $recent['theme'] ];
+			$types[ $recent['export_type'] ] = @++$types[ $recent['export_type'] ];
 
 			$prev = $siteurl;
 			$next = false;
@@ -126,24 +129,25 @@ if ( ! defined( 'ABSPATH' ) )
 		<?php
 		$i = 1;
 		foreach ( $books_exported_today as $key => $val ) {
-			?><tr <?php if ( $i % 2 ) echo 'class="alternate"'; ?> ><?php
+			?><tr <?php if ( $i % 2 ) { echo 'class="alternate"';
+			} ?> ><?php
 			echo "<td><a href='" . get_site_url( $val['blog_id'] ) . "'>{$val['blogname']}</a></td>";
-			echo "<td>" . ( $val['blog_public'] ? '<strong>yes</strong>' : '<span style="color:#ccc;">no</span>' ) . "</td>";
+			echo '<td>' . ( $val['blog_public'] ? '<strong>yes</strong>' : '<span style="color:#ccc;">no</span>' ) . '</td>';
 
-			if ( is_plugin_active( 'pressbooks-vip/pressbooks-vip.php' ) ) {
-				$upgrade_level = strtoupper( $val['pressbooks_upgrade_level'] );
-				echo "<td>" . ( $val['pressbooks_upgrade_level'] ? "<strong>$upgrade_level</strong> ($" . number_format( ( PressbooksVIP\Upgrade\actual_package_value( $val['pressbooks_upgrade_level'] ) / 100 ), 2 ) . ")" : "<span style='color:#ccc;'>n/a</span>" ) . "</td>";
-			}
+if ( is_plugin_active( 'pressbooks-vip/pressbooks-vip.php' ) ) {
+	$upgrade_level = strtoupper( $val['pressbooks_upgrade_level'] );
+	echo '<td>' . ( $val['pressbooks_upgrade_level'] ? "<strong>$upgrade_level</strong> ($" . number_format( ( PressbooksVIP\Upgrade\actual_package_value( $val['pressbooks_upgrade_level'] ) / 100 ), 2 ) . ')' : "<span style='color:#ccc;'>n/a</span>" ) . '</td>';
+}
 
 			echo "<td>{$val['total']}</td>";
-			echo "</tr>";
+			echo '</tr>';
 			++$i;
 		}
 		?>
 		</tbody>
 	</table>
 
-	<?php while (@ob_end_flush()); ?>
+	<?php while ( @ob_end_flush() ) {} // @codingStandardsIgnoreLine ?>
 
 	<table>
 		<caption>Users who exported in the last 24h</caption>
@@ -159,14 +163,15 @@ if ( ! defined( 'ABSPATH' ) )
 		<?php
 		$i = 1;
 		foreach ( $users_exported_today as $key => $val ) {
-		?><tr <?php if ( $i % 2 ) echo 'class="alternate"'; ?> ><?php
+		?><tr <?php if ( $i % 2 ) { echo 'class="alternate"';
+		} ?> ><?php
 			echo "<td><a href='" . site_url() . '/wp-admin/network/users.php?orderby=id&order=DESC&s=' . $val['username'] . "'>{$val['username']}</a> | <a href='mailto:{$val['user_email']}'>{$val['user_email']}</a></td>";
 			echo '<td>' . count( get_blogs_of_user( $val['user_id'], true ) ) . '</td>';
-			echo "<td>" . ( $val['is_new'] ? '<strong>yes</strong>' : '<span style="color:#ccc;">no</span>' ) . "</td>";
+			echo '<td>' . ( $val['is_new'] ? '<strong>yes</strong>' : '<span style="color:#ccc;">no</span>' ) . '</td>';
 			echo "<td>{$val['total']}</td>";
-			echo "</tr>";
+			echo '</tr>';
 			++$i;
-			}
+		}
 			?>
 		</tbody>
 	</table>
@@ -186,13 +191,13 @@ if ( ! defined( 'ABSPATH' ) )
 		<tbody>
 		<?php
 		foreach ( $sites as $key => $val ) {
-			echo "<tr>";
-			echo "<th>" . ( ! empty( $key ) ? ucfirst( $key ) : '...' ) . "</th>";
+			echo '<tr>';
+			echo '<th>' . ( ! empty( $key ) ? ucfirst( $key ) : '...' ) . '</th>';
 			echo "<td>{$val['today']}</td>";
 			echo "<td>{$val['week']}</td>";
 			echo "<td>{$val['month']}</td>";
 			echo "<td>{$val['quarter']}</td>";
-			echo "</tr>";
+			echo '</tr>';
 		}
 		?>
 		</tbody>
@@ -213,13 +218,13 @@ if ( ! defined( 'ABSPATH' ) )
 		<tbody>
 		<?php
 		foreach ( $users as $key => $val ) {
-			echo "<tr>";
-			echo "<th>" . ( ! empty( $key ) ? ucfirst( $key ) : '...' ) . "</th>";
+			echo '<tr>';
+			echo '<th>' . ( ! empty( $key ) ? ucfirst( $key ) : '...' ) . '</th>';
 			echo "<td>{$val['today']}</td>";
 			echo "<td>{$val['week']}</td>";
 			echo "<td>{$val['month']}</td>";
 			echo "<td>{$val['quarter']}</td>";
-			echo "</tr>";
+			echo '</tr>';
 		}
 		?>
 		</tbody>
@@ -245,13 +250,13 @@ if ( ! defined( 'ABSPATH' ) )
 		} );
 
 		foreach ( $export_types as $key => $val ) {
-			echo "<tr>";
-			echo "<th>" . ( ! empty( $key ) ? ucfirst( $key ) : '...' ) . "</th>";
+			echo '<tr>';
+			echo '<th>' . ( ! empty( $key ) ? ucfirst( $key ) : '...' ) . '</th>';
 			echo "<td>{$val['today']}</td>";
 			echo "<td>{$val['week']}</td>";
 			echo "<td>{$val['month']}</td>";
 			echo "<td>{$val['quarter']}</td>";
-			echo "</tr>";
+			echo '</tr>';
 
 		}
 		?>
@@ -278,13 +283,13 @@ if ( ! defined( 'ABSPATH' ) )
 		} );
 
 		foreach ( $export_themes as $key => $val ) {
-			echo "<tr>";
-			echo "<th>" . ( ! empty( $key ) ? ucfirst( $key ) : '...' ) . "</th>";
+			echo '<tr>';
+			echo '<th>' . ( ! empty( $key ) ? ucfirst( $key ) : '...' ) . '</th>';
 			echo "<td>{$val['today']}</td>";
 			echo "<td>{$val['week']}</td>";
 			echo "<td>{$val['month']}</td>";
 			echo "<td>{$val['quarter']}</td>";
-			echo "</tr>";
+			echo '</tr>';
 
 		}
 		?>

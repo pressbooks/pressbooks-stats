@@ -15,8 +15,7 @@ if ( ! @include_once( WP_PLUGIN_DIR . '/pressbooks/compatibility.php' ) ) {
 		echo '<div id="message" class="error fade"><p>' . __( 'Cannot find Pressbooks install.', 'pressbooks' ) . '</p></div>';
 	} );
 	return;
-}
-elseif ( ! pb_meets_minimum_requirements() ) {
+} elseif ( ! pb_meets_minimum_requirements() ) {
 	return;
 }
 
@@ -24,11 +23,13 @@ elseif ( ! pb_meets_minimum_requirements() ) {
 // Setup some defaults
 // -------------------------------------------------------------------------------------------------------------------
 
-if ( ! defined( 'PB_STATS_PLUGIN_DIR' ) )
-	define ( 'PB_STATS_PLUGIN_DIR', __DIR__ . '/' ); // Must have trailing slash!
+if ( ! defined( 'PB_STATS_PLUGIN_DIR' ) ) {
+	define( 'PB_STATS_PLUGIN_DIR', __DIR__ . '/' ); // Must have trailing slash!
+}
 
-if ( ! defined( 'PB_STATS_PLUGIN_URL' ) )
-	define ( 'PB_STATS_PLUGIN_URL', plugin_dir_url( __FILE__ ) ); // Must have trailing slash!
+if ( ! defined( 'PB_STATS_PLUGIN_URL' ) ) {
+	define( 'PB_STATS_PLUGIN_URL', plugin_dir_url( __FILE__ ) ); // Must have trailing slash!
+}
 
 // -------------------------------------------------------------------------------------------------------------------
 // Class autoloader

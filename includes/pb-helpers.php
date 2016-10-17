@@ -18,7 +18,7 @@ function load_template( $path, array $vars = array() ) {
 	}
 
 	ob_start();
-	extract( $vars );
+	extract( $vars ); // @codingStandardsIgnoreLine
 	include( $path );
 	$output = ob_get_contents();
 	ob_end_clean();

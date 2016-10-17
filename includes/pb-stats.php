@@ -22,7 +22,7 @@ function track_export( $export_type ) {
 			'theme' => '' . wp_get_theme(), // Stringify by appending to empty string
 
 		),
-		array( '%d', '%d', '%s', '%s', '%s' ) );
+	array( '%d', '%d', '%s', '%s', '%s' ) );
 }
 
 
@@ -50,21 +50,21 @@ function menu() {
 
 	$user = wp_get_current_user();
 
-    $restricted = $wpdb->get_results( 'SELECT * FROM wp_sitemeta WHERE meta_key = "pressbooks_network_managers"' );
-    if ( $restricted ) {
-        $restricted = maybe_unserialize( $restricted[0]->meta_value );
-    } else {
+	$restricted = $wpdb->get_results( 'SELECT * FROM wp_sitemeta WHERE meta_key = "pressbooks_network_managers"' );
+	if ( $restricted ) {
+		$restricted = maybe_unserialize( $restricted[0]->meta_value );
+	} else {
 	    $restricted = array();
 	}
 
-	if ( !in_array( $user->ID, $restricted ) ) {
+	if ( ! in_array( $user->ID, $restricted ) ) {
 		$page = add_menu_page(
 			'Pressbooks Statistics',
 			'PB Stats',
 			'manage_network',
 			'pb_stats',
 			__NAMESPACE__ . '\display_stats_admin_page',
-			'dashicons-chart-pie' );
+		'dashicons-chart-pie' );
 
 		add_action( 'admin_enqueue_scripts', function ( $hook ) use ( $page ) {
 
@@ -76,7 +76,6 @@ function menu() {
 				wp_enqueue_script( 'pb-vip-stats-5' );
 				wp_enqueue_style( 'pb-vip-stats-6' );
 			}
-
 		} );
 	}
 
@@ -119,11 +118,11 @@ function query_totals() {
 
 	// Sites
 
-	$sql = "SELECT COUNT(*) AS total FROM wp_blogs ";
+	$sql = 'SELECT COUNT(*) AS total FROM wp_blogs ';
 	$tmp = $wpdb->get_results( $sql, ARRAY_A );
 	$foo['sites']['total'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT(*) AS total FROM wp_blogs WHERE spam = 1 ";
+	$sql = 'SELECT COUNT(*) AS total FROM wp_blogs WHERE spam = 1 ';
 	$tmp = $wpdb->get_results( $sql, ARRAY_A );
 	$foo['sites']['spam'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
@@ -133,11 +132,11 @@ function query_totals() {
 
 	// Users
 
-	$sql = "SELECT COUNT(*) AS total FROM wp_users ";
+	$sql = 'SELECT COUNT(*) AS total FROM wp_users ';
 	$tmp = $wpdb->get_results( $sql, ARRAY_A );
 	$foo['users']['total'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT(*) AS total FROM wp_users WHERE spam = 1 ";
+	$sql = 'SELECT COUNT(*) AS total FROM wp_users WHERE spam = 1 ';
 	$tmp = $wpdb->get_results( $sql, ARRAY_A );
 	$foo['users']['spam'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
@@ -150,14 +149,14 @@ function query_last_100() {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$sql = "SELECT wp_blogs.domain, wp_blogs.path,
+	$sql = 'SELECT wp_blogs.domain, wp_blogs.path,
                    stats.blog_id, stats.time, stats.export_type, stats.user_id, stats.theme,
                    wp_users.user_login, wp_users.user_email
               FROM wp_pressbooks_stats_exports AS stats
               JOIN wp_blogs ON stats.blog_id = wp_blogs.blog_id
          LEFT JOIN wp_users ON (stats.user_id = wp_users.ID)
          ORDER BY stats.time DESC
-             LIMIT 100 ";
+             LIMIT 100 ';
 
 	$foo = $wpdb->get_results( $sql, ARRAY_A );
 
@@ -167,11 +166,10 @@ function query_last_100() {
 		$tmp = $wpdb->get_results( $sql, ARRAY_A );
 
 		if ( isset( $tmp[0]['option_value'] ) ) {
-			$foo[$key]['blogname'] = $tmp[0]['option_value'];
+			$foo[ $key ]['blogname'] = $tmp[0]['option_value'];
 		} else {
-			$foo[$key]['blogname'] = '__unknown__';
+			$foo[ $key ]['blogname'] = '__unknown__';
 		}
-
 	}
 
 	return $foo;
@@ -200,28 +198,27 @@ function query_books_exported( $interval, $just_the_count = false ) {
 			$tmp = $wpdb->get_results( $sql, ARRAY_A );
 
 			if ( isset( $tmp[0]['option_value'] ) ) {
-				$foo[$key]['blogname'] = $tmp[0]['option_value'];
+				$foo[ $key ]['blogname'] = $tmp[0]['option_value'];
 			} else {
-				$foo[$key]['blogname'] = '__unknown__';
+				$foo[ $key ]['blogname'] = '__unknown__';
 			}
 
 			$sql = "SELECT option_value FROM wp_{$val['blog_id']}_options WHERE option_name = 'blog_public' ";
 			$tmp = $wpdb->get_results( $sql, ARRAY_A );
-			$foo[$key]['blog_public'] = $tmp[0]['option_value'];
+			$foo[ $key ]['blog_public'] = $tmp[0]['option_value'];
 
 			$sql = "SELECT option_value FROM wp_{$val['blog_id']}_options WHERE option_name = 'pressbooks_upgrade_level' ";
 			$tmp = $wpdb->get_results( $sql, ARRAY_A );
-			$foo[$key]['pressbooks_upgrade_level'] = $tmp[0]['option_value'];
+			$foo[ $key ]['pressbooks_upgrade_level'] = $tmp[0]['option_value'];
 
 		}
-
 	}
 
 	return $foo;
 
 }
 
-function query_users_exported ( $interval, $just_the_count = false ) {
+function query_users_exported( $interval, $just_the_count = false ) {
 
 	/** @var \wpdb $wpdb */
 	global $wpdb;
@@ -238,21 +235,20 @@ function query_users_exported ( $interval, $just_the_count = false ) {
 	if ( false == $just_the_count ) {
 
 		$is_new = array();
-		$sql = "SELECT ID FROM wp_users
-		WHERE user_registered > DATE_SUB(NOW(), INTERVAL 24 HOUR)";
+		$sql = 'SELECT ID FROM wp_users
+        WHERE user_registered > DATE_SUB(NOW(), INTERVAL 24 HOUR)';
 		$bar = $wpdb->get_results( $sql, ARRAY_A );
 		foreach ( $bar as $val ) {
-			$is_new[$val['ID']] = true;
+			$is_new[ $val['ID'] ] = true;
 		}
 		unset( $bar );
 
 		foreach ( $foo as $key => $val ) {
 			$user_info = get_userdata( $val['user_id'] );
-			$foo[$key]['username'] = $user_info->user_login;
-			$foo[$key]['user_email'] = $user_info->user_email;
-			$foo[$key]['is_new'] = isset( $is_new[$val['user_id']] ) ? true : false;
+			$foo[ $key ]['username'] = $user_info->user_login;
+			$foo[ $key ]['user_email'] = $user_info->user_email;
+			$foo[ $key ]['is_new'] = isset( $is_new[ $val['user_id'] ] ) ? true : false;
 		}
-
 	}
 
 	return $foo;
@@ -295,16 +291,20 @@ function query_export_stats( $col ) {
 
 	foreach ( $foo as $range => $val ) {
 		foreach ( $val as $val2 ) {
-			$bar[$val2[$col]][$range] = @$bar[$val2[$col]][$range] + $val2['total'];
+			$bar[ $val2[ $col ] ][ $range ] = @$bar[ $val2[ $col ] ][ $range ] + $val2['total'];
 		}
 	}
 
 	// Add missing zeros
 	foreach ( $bar as $key => $val ) {
-		if ( ! isset( $val['today'] ) ) $bar[$key]['today'] = 0;
-		if ( ! isset( $val['week'] ) ) $bar[$key]['week'] = 0;
-		if ( ! isset( $val['month'] ) ) $bar[$key]['month'] = 0;
-		if ( ! isset( $val['quarter'] ) ) $bar[$key]['quarter'] = 0;
+		if ( ! isset( $val['today'] ) ) { $bar[ $key ]['today'] = 0;
+		}
+		if ( ! isset( $val['week'] ) ) { $bar[ $key ]['week'] = 0;
+		}
+		if ( ! isset( $val['month'] ) ) { $bar[ $key ]['month'] = 0;
+		}
+		if ( ! isset( $val['quarter'] ) ) { $bar[ $key ]['quarter'] = 0;
+		}
 	}
 
 	ksort( $bar );
@@ -477,12 +477,12 @@ function users_with_x_or_more_books( $x ) {
 	foreach ( $tmp as $val ) {
 		if ( $val['total'] >= $x ) {
 
-			$sql = "SELECT `time` FROM wp_pressbooks_stats_exports WHERE user_id = " . absint( $val['user_id'] ) . " ORDER BY `time` DESC LIMIT 1 ";
+			$sql = 'SELECT `time` FROM wp_pressbooks_stats_exports WHERE user_id = ' . absint( $val['user_id'] ) . ' ORDER BY `time` DESC LIMIT 1 ';
 			$tmp2 = $wpdb->get_results( $sql, ARRAY_A );
 
 			$foo[] = array(
 				'username' => $val['username'],
-				'last_export' => ( isset( $tmp2[0]['time'] ) ? date( "Y-m-d", strtotime( $tmp2[0]['time'] ) ) : '!' ),
+				'last_export' => ( isset( $tmp2[0]['time'] ) ? date( 'Y-m-d', strtotime( $tmp2[0]['time'] ) ) : '!' ),
 			);
 		}
 	}
