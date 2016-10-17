@@ -27,6 +27,7 @@
     },
     "scripts": {
       "test": [
+        "vendor/bin/phpunit"
         "vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs",
         "vendor/bin/phpcs --standard=phpcs.xml --extensions=php ."
       ]
