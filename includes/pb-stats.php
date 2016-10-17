@@ -1,5 +1,5 @@
 <?php
-
+// @codingStandardsIgnoreStart
 namespace PressbooksStats\Stats;
 
 /**
@@ -493,3 +493,4 @@ function users_with_x_or_more_books( $x ) {
 
 	return $foo;
 }
+// @codingStandardsIgnoreEnd
