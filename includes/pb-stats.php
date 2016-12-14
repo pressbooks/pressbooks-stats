@@ -487,7 +487,7 @@ function users_with_x_or_more_books( $x ) {
 		}
 	}
 
-	$foo = \Pressbooks\Utility\multi_sort( $foo, 'last_export:desc' );
+	$foo = wp_list_sort( $foo, array( 'last_export' => 'DESC' ) );
 
 	set_transient( $transient, $foo, 60 * 60 * 12 );
 
