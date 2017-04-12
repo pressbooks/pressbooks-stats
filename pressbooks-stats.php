@@ -54,15 +54,6 @@ function _pressbooks_stats_autoload( $class_name ) {
 spl_autoload_register( '_pressbooks_stats_autoload' );
 
 // -------------------------------------------------------------------------------------------------------------------
-// Composer autoloader
-// -------------------------------------------------------------------------------------------------------------------
-if ( is_file( PB_STATS_PLUGIN_DIR . 'vendor/autoload.php' ) ) {
-	include( PB_STATS_PLUGIN_DIR . 'vendor/autoload.php' );
-} else {
-	die( __( 'Dependencies missing. Please run \'composer install\' from the root of the Pressbooks Stats plugin directory.', 'pressbooks' ) );
-}
-
-// -------------------------------------------------------------------------------------------------------------------
 // Requires
 // -------------------------------------------------------------------------------------------------------------------
 
