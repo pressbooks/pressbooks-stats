@@ -2,7 +2,7 @@
 /*
 Plugin Name: Pressbooks Stats
 Description: Pressbooks plugin which provides some basic activity statistics for a Pressbooks network.
-Version: 1.2.0
+Version: 1.2.1
 Author: BookOven Inc.
 */
 
