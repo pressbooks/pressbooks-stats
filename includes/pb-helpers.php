@@ -92,11 +92,12 @@ function rename_table() {
 
 	$oldTableName = 'wp_pressbooks_stats_exports';
 
-	if ( $oldTableName == get_stats_table() ) {
+	if ( get_stats_table() == $oldTableName ) {
 		// The old and new table names are the same, ignore
 		return;
 	}
 
+	// @codingStandardsIgnoreStart
 	$checkIfOldTableExistsSql = "SELECT 1 FROM {$oldTableName} LIMIT 1 ";
 	$wpdb->get_results( $checkIfOldTableExistsSql, ARRAY_A );
 	if ( ! $wpdb->last_error ) {
@@ -104,4 +105,5 @@ function rename_table() {
 		$renameTableSql = "RENAME TABLE {$oldTableName} TO " . get_stats_table();
 		$wpdb->query( $renameTableSql );
 	}
+	// @codingStandardsIgnoreEnd
 }
