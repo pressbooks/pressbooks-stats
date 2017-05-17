@@ -13,7 +13,7 @@ function track_export( $export_type ) {
 	global $wpdb;
 
 	$wpdb->insert(
-		'wp_pressbooks_stats_exports',
+		\PressbooksStats\Helpers\get_stats_table(),
 		array(
 			'user_id' => get_current_user_id(),
 			'blog_id' => get_current_blog_id(),
@@ -46,11 +46,12 @@ function init_css_js() {
  */
 function menu() {
 
+	/** @var $wpdb \wpdb */
 	global $wpdb;
 
 	$user = wp_get_current_user();
 
-	$restricted = $wpdb->get_results( 'SELECT * FROM wp_sitemeta WHERE meta_key = "pressbooks_network_managers"' );
+	$restricted = $wpdb->get_results( "SELECT * FROM {$wpdb->sitemeta} WHERE meta_key = 'pressbooks_network_managers' " );
 	if ( $restricted ) {
 		$restricted = maybe_unserialize( $restricted[0]->meta_value );
 	} else {
@@ -118,25 +119,25 @@ function query_totals() {
 
 	// Sites
 
-	$sql = 'SELECT COUNT(*) AS total FROM wp_blogs ';
+	$sql = "SELECT COUNT(*) AS total FROM {$wpdb->blogs} ";
 	$tmp = $wpdb->get_results( $sql, ARRAY_A );
 	$foo['sites']['total'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = 'SELECT COUNT(*) AS total FROM wp_blogs WHERE spam = 1 ';
+	$sql = "SELECT COUNT(*) AS total FROM {$wpdb->blogs} WHERE spam = 1 ";
 	$tmp = $wpdb->get_results( $sql, ARRAY_A );
 	$foo['sites']['spam'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT(*) AS total FROM wp_blogs WHERE ( deleted = 1 OR archived = '1') AND ( spam = 0 ) ";
+	$sql = "SELECT COUNT(*) AS total FROM {$wpdb->blogs} WHERE ( deleted = 1 OR archived = '1') AND ( spam = 0 ) ";
 	$tmp = $wpdb->get_results( $sql, ARRAY_A );
 	$foo['sites']['deactivated'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	// Users
 
-	$sql = 'SELECT COUNT(*) AS total FROM wp_users ';
+	$sql = "SELECT COUNT(*) AS total FROM {$wpdb->users} ";
 	$tmp = $wpdb->get_results( $sql, ARRAY_A );
 	$foo['users']['total'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = 'SELECT COUNT(*) AS total FROM wp_users WHERE spam = 1 ';
+	$sql = "SELECT COUNT(*) AS total FROM {$wpdb->users} WHERE spam = 1 ";
 	$tmp = $wpdb->get_results( $sql, ARRAY_A );
 	$foo['users']['spam'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
@@ -149,20 +150,21 @@ function query_last_100() {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$sql = 'SELECT wp_blogs.domain, wp_blogs.path,
+	$stats = \PressbooksStats\Helpers\get_stats_table();
+	$sql = "SELECT {$wpdb->blogs}.domain, {$wpdb->blogs}.path,
                    stats.blog_id, stats.time, stats.export_type, stats.user_id, stats.theme,
-                   wp_users.user_login, wp_users.user_email
-              FROM wp_pressbooks_stats_exports AS stats
-              JOIN wp_blogs ON stats.blog_id = wp_blogs.blog_id
-         LEFT JOIN wp_users ON (stats.user_id = wp_users.ID)
+                   {$wpdb->users}.user_login, {$wpdb->users}.user_email
+              FROM {$stats} AS stats
+              JOIN {$wpdb->blogs} ON stats.blog_id = {$wpdb->blogs}.blog_id
+         LEFT JOIN {$wpdb->users} ON (stats.user_id = {$wpdb->users}.ID)
          ORDER BY stats.time DESC
-             LIMIT 100 ';
+             LIMIT 100 ";
 
 	$foo = $wpdb->get_results( $sql, ARRAY_A );
 
 	foreach ( $foo as $key => $val ) {
 
-		$sql = "SELECT option_value FROM wp_{$val['blog_id']}_options WHERE option_name = 'blogname' LIMIT 1 ";
+		$sql = "SELECT option_value FROM {$wpdb->base_prefix}{$val['blog_id']}_options WHERE option_name = 'blogname' LIMIT 1 ";
 		$tmp = $wpdb->get_results( $sql, ARRAY_A );
 
 		if ( isset( $tmp[0]['option_value'] ) ) {
@@ -181,7 +183,7 @@ function query_books_exported( $interval, $just_the_count = false ) {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$table = 'wp_pressbooks_stats_exports';
+	$table = \PressbooksStats\Helpers\get_stats_table();
 	$time = 'time';
 	$col = 'blog_id';
 
@@ -194,7 +196,7 @@ function query_books_exported( $interval, $just_the_count = false ) {
 
 		foreach ( $foo as $key => $val ) {
 
-			$sql = "SELECT option_value FROM wp_{$val['blog_id']}_options WHERE option_name = 'blogname' ";
+			$sql = "SELECT option_value FROM {$wpdb->base_prefix}{$val['blog_id']}_options WHERE option_name = 'blogname' ";
 			$tmp = $wpdb->get_results( $sql, ARRAY_A );
 
 			if ( isset( $tmp[0]['option_value'] ) ) {
@@ -203,13 +205,13 @@ function query_books_exported( $interval, $just_the_count = false ) {
 				$foo[ $key ]['blogname'] = '__unknown__';
 			}
 
-			$sql = "SELECT option_value FROM wp_{$val['blog_id']}_options WHERE option_name = 'blog_public' ";
+			$sql = "SELECT option_value FROM {$wpdb->base_prefix}{$val['blog_id']}_options WHERE option_name = 'blog_public' ";
 			$tmp = $wpdb->get_results( $sql, ARRAY_A );
-			$foo[ $key ]['blog_public'] = $tmp[0]['option_value'];
+			$foo[ $key ]['blog_public'] = isset( $tmp[0]['option_value'] ) ? $tmp[0]['option_value'] : null;
 
-			$sql = "SELECT option_value FROM wp_{$val['blog_id']}_options WHERE option_name = 'pressbooks_upgrade_level' ";
+			$sql = "SELECT option_value FROM {$wpdb->base_prefix}{$val['blog_id']}_options WHERE option_name = 'pressbooks_upgrade_level' ";
 			$tmp = $wpdb->get_results( $sql, ARRAY_A );
-			$foo[ $key ]['pressbooks_upgrade_level'] = $tmp[0]['option_value'];
+			$foo[ $key ]['pressbooks_upgrade_level'] = isset( $tmp[0]['option_value'] ) ? $tmp[0]['option_value'] : null;
 
 		}
 	}
@@ -223,7 +225,7 @@ function query_users_exported( $interval, $just_the_count = false ) {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$table = 'wp_pressbooks_stats_exports';
+	$table = \PressbooksStats\Helpers\get_stats_table();
 	$time = 'time';
 	$col = 'user_id';
 
@@ -235,8 +237,8 @@ function query_users_exported( $interval, $just_the_count = false ) {
 	if ( false == $just_the_count ) {
 
 		$is_new = array();
-		$sql = 'SELECT ID FROM wp_users
-        WHERE user_registered > DATE_SUB(NOW(), INTERVAL 24 HOUR)';
+		$sql = "SELECT ID FROM {$wpdb->users}
+        WHERE user_registered > DATE_SUB(NOW(), INTERVAL 24 HOUR)";
 		$bar = $wpdb->get_results( $sql, ARRAY_A );
 		foreach ( $bar as $val ) {
 			$is_new[ $val['ID'] ] = true;
@@ -261,7 +263,7 @@ function query_export_stats( $col ) {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$table = 'wp_pressbooks_stats_exports';
+	$table = \PressbooksStats\Helpers\get_stats_table();
 	$time = 'time';
 
 	$foo = array();
@@ -327,7 +329,7 @@ function query_sites_stats( $col ) {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$table = 'wp_blogs';
+	$table = "{$wpdb->blogs}";
 	$time = 'registered';
 
 	$foo = array();
@@ -409,7 +411,7 @@ function query_user_stats( $col ) {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$table = 'wp_users';
+	$table = "{$wpdb->users}";
 	$time = 'user_registered';
 
 	$foo = array();
@@ -467,17 +469,17 @@ function users_with_x_or_more_books( $x ) {
 
 	$foo = array();
 
-	$sql = "SELECT wp_usermeta.user_id, wp_users.user_login AS username, count(wp_usermeta.meta_key) AS total FROM wp_usermeta
-	INNER JOIN wp_users ON wp_usermeta.user_id = wp_users.ID
-	WHERE wp_usermeta.meta_key LIKE 'wp_%_capabilities' AND wp_usermeta.meta_value LIKE '%administrator%' AND wp_users.spam = 0
-	GROUP BY wp_usermeta.user_id ";
+	$sql = "SELECT {$wpdb->usermeta}.user_id, {$wpdb->users}.user_login AS username, count({$wpdb->usermeta}.meta_key) AS total FROM {$wpdb->usermeta}
+	INNER JOIN {$wpdb->users} ON {$wpdb->usermeta}.user_id = {$wpdb->users}.ID
+	WHERE {$wpdb->usermeta}.meta_key LIKE 'wp_%_capabilities' AND {$wpdb->usermeta}.meta_value LIKE '%administrator%' AND {$wpdb->users}.spam = 0
+	GROUP BY {$wpdb->usermeta}.user_id ";
 
 	$tmp = $wpdb->get_results( $sql, ARRAY_A );
 
 	foreach ( $tmp as $val ) {
 		if ( $val['total'] >= $x ) {
 
-			$sql = 'SELECT `time` FROM wp_pressbooks_stats_exports WHERE user_id = ' . absint( $val['user_id'] ) . ' ORDER BY `time` DESC LIMIT 1 ';
+			$sql = 'SELECT `time` FROM ' . \PressbooksStats\Helpers\get_stats_table() . ' WHERE user_id = ' . absint( $val['user_id'] ) . ' ORDER BY `time` DESC LIMIT 1 ';
 			$tmp2 = $wpdb->get_results( $sql, ARRAY_A );
 
 			$foo[] = array(
