@@ -1,5 +1,5 @@
 <?php
-// @codingStandardsIgnoreStart
+
 namespace PressbooksStats\Stats;
 
 /**
@@ -14,15 +14,15 @@ function track_export( $export_type ) {
 
 	$wpdb->insert(
 		\PressbooksStats\Helpers\get_stats_table(),
-		array(
+		[
 			'user_id' => get_current_user_id(),
 			'blog_id' => get_current_blog_id(),
 			'time' => date( 'Y-m-d H:i:s' ),
 			'export_type' => $export_type,
 			'theme' => '' . wp_get_theme(), // Stringify by appending to empty string
 
-		),
-	array( '%d', '%d', '%s', '%s', '%s' ) );
+		], [ '%d', '%d', '%s', '%s', '%s' ]
+	);
 }
 
 
@@ -31,13 +31,13 @@ function track_export( $export_type ) {
  */
 function init_css_js() {
 
-	wp_register_script( 'pb-vip-stats-1', PB_STATS_PLUGIN_URL . 'symbionts/visualize/js/visualize.jQuery.js', array( 'jquery' ) );
+	wp_register_script( 'pb-vip-stats-1', PB_STATS_PLUGIN_URL . 'symbionts/visualize/js/visualize.jQuery.js', [ 'jquery' ] );
 	wp_register_style( 'pb-vip-stats-2', PB_STATS_PLUGIN_URL . 'symbionts/visualize/css/basic.css' );
 	wp_register_style( 'pb-vip-stats-3', PB_STATS_PLUGIN_URL . 'symbionts/visualize/css/visualize.css' );
 	wp_register_style( 'pb-vip-stats-4', PB_STATS_PLUGIN_URL . 'symbionts/visualize/css/visualize-light.css' );
 
-	wp_register_script( 'pb-vip-stats-5', PB_STATS_PLUGIN_URL . 'assets/js/graphs.js', array( 'pb-vip-stats-1' ), '20130718' );
-	wp_register_style( 'pb-vip-stats-6', PB_STATS_PLUGIN_URL . 'assets/css/stats.css', array(), '20130718' );
+	wp_register_script( 'pb-vip-stats-5', PB_STATS_PLUGIN_URL . 'assets/js/graphs.js', [ 'pb-vip-stats-1' ], '20130718' );
+	wp_register_style( 'pb-vip-stats-6', PB_STATS_PLUGIN_URL . 'assets/css/stats.css', [], '20130718' );
 }
 
 
@@ -55,10 +55,10 @@ function menu() {
 	if ( $restricted ) {
 		$restricted = maybe_unserialize( $restricted[0]->meta_value );
 	} else {
-	    $restricted = array();
+		$restricted = [];
 	}
 
-	if ( ! in_array( $user->ID, $restricted ) ) {
+	if ( ! in_array( $user->ID, $restricted ) ) { // @codingStandardsIgnoreLine
 		$page = add_menu_page(
 			'Pressbooks Statistics',
 			'PB Stats',
@@ -69,7 +69,7 @@ function menu() {
 
 		add_action( 'admin_enqueue_scripts', function ( $hook ) use ( $page ) {
 
-			if ( $hook == $page ) {
+			if ( $hook === $page ) {
 				wp_enqueue_script( 'pb-vip-stats-1' );
 				wp_enqueue_style( 'pb-vip-stats-2' );
 				wp_enqueue_style( 'pb-vip-stats-3' );
@@ -88,7 +88,7 @@ function menu() {
  */
 function display_stats_admin_page() {
 
-	$vars = array(
+	$vars = [
 		'totals' => query_totals(),
 		'books_exported_today' => query_books_exported( '24 HOUR' ),
 		'users_exported_today' => query_users_exported( '24 HOUR' ),
@@ -100,7 +100,7 @@ function display_stats_admin_page() {
 		'export_types' => query_export_stats( 'export_type' ),
 		'export_themes' => query_export_stats( 'theme' ),
 		'recents' => query_last_100(),
-	);
+	];
 
 	echo \PressbooksStats\Helpers\load_template( PB_STATS_PLUGIN_DIR . '/templates/stats.php', $vars );
 }
@@ -115,30 +115,25 @@ function query_totals() {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$foo = array();
+	$foo = [];
 
 	// Sites
 
-	$sql = "SELECT COUNT(*) AS total FROM {$wpdb->blogs} ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( "SELECT COUNT(*) AS total FROM {$wpdb->blogs} ", ARRAY_A );
 	$foo['sites']['total'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT(*) AS total FROM {$wpdb->blogs} WHERE spam = 1 ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( "SELECT COUNT(*) AS total FROM {$wpdb->blogs} WHERE spam = 1 ", ARRAY_A );
 	$foo['sites']['spam'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT(*) AS total FROM {$wpdb->blogs} WHERE ( deleted = 1 OR archived = '1') AND ( spam = 0 ) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( "SELECT COUNT(*) AS total FROM {$wpdb->blogs} WHERE ( deleted = 1 OR archived = '1') AND ( spam = 0 ) ", ARRAY_A );
 	$foo['sites']['deactivated'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	// Users
 
-	$sql = "SELECT COUNT(*) AS total FROM {$wpdb->users} ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( "SELECT COUNT(*) AS total FROM {$wpdb->users} ", ARRAY_A );
 	$foo['users']['total'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT(*) AS total FROM {$wpdb->users} WHERE spam = 1 ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( "SELECT COUNT(*) AS total FROM {$wpdb->users} WHERE spam = 1 ", ARRAY_A );
 	$foo['users']['spam'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	return $foo;
@@ -192,7 +187,7 @@ function query_books_exported( $interval, $just_the_count = false ) {
 	GROUP BY {$col} ORDER BY total DESC ";
 	$foo = $wpdb->get_results( $sql, ARRAY_A );
 
-	if ( false == $just_the_count ) {
+	if ( false === (bool) $just_the_count ) {
 
 		foreach ( $foo as $key => $val ) {
 
@@ -234,9 +229,9 @@ function query_users_exported( $interval, $just_the_count = false ) {
 	GROUP BY {$col} ORDER BY total DESC ";
 	$foo = $wpdb->get_results( $sql, ARRAY_A );
 
-	if ( false == $just_the_count ) {
+	if ( false === (bool) $just_the_count ) {
 
-		$is_new = array();
+		$is_new = [];
 		$sql = "SELECT ID FROM {$wpdb->users}
         WHERE user_registered > DATE_SUB(NOW(), INTERVAL 24 HOUR)";
 		$bar = $wpdb->get_results( $sql, ARRAY_A );
@@ -266,8 +261,8 @@ function query_export_stats( $col ) {
 	$table = \PressbooksStats\Helpers\get_stats_table();
 	$time = 'time';
 
-	$foo = array();
-	$bar = array();
+	$foo = [];
+	$bar = [];
 
 	// today, week, month, quarter
 
@@ -293,19 +288,23 @@ function query_export_stats( $col ) {
 
 	foreach ( $foo as $range => $val ) {
 		foreach ( $val as $val2 ) {
-			$bar[ $val2[ $col ] ][ $range ] = @$bar[ $val2[ $col ] ][ $range ] + $val2['total'];
+			$bar[ $val2[ $col ] ][ $range ] = @$bar[ $val2[ $col ] ][ $range ] + $val2['total']; // @codingStandardsIgnoreLine
 		}
 	}
 
 	// Add missing zeros
 	foreach ( $bar as $key => $val ) {
-		if ( ! isset( $val['today'] ) ) { $bar[ $key ]['today'] = 0;
+		if ( ! isset( $val['today'] ) ) {
+			$bar[ $key ]['today'] = 0;
 		}
-		if ( ! isset( $val['week'] ) ) { $bar[ $key ]['week'] = 0;
+		if ( ! isset( $val['week'] ) ) {
+			$bar[ $key ]['week'] = 0;
 		}
-		if ( ! isset( $val['month'] ) ) { $bar[ $key ]['month'] = 0;
+		if ( ! isset( $val['month'] ) ) {
+			$bar[ $key ]['month'] = 0;
 		}
-		if ( ! isset( $val['quarter'] ) ) { $bar[ $key ]['quarter'] = 0;
+		if ( ! isset( $val['quarter'] ) ) {
+			$bar[ $key ]['quarter'] = 0;
 		}
 	}
 
@@ -329,65 +328,51 @@ function query_sites_stats( $col ) {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$table = "{$wpdb->blogs}";
 	$time = 'registered';
-
-	$foo = array();
+	$foo = [];
 
 	// Registered
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE `{$time}` > DATE_SUB(NOW(), INTERVAL 24 HOUR) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > DATE_SUB(NOW(), INTERVAL 24 HOUR) ", $col, $time ), ARRAY_A );
 	$foo['registered']['today'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE `{$time}` > NOW() - INTERVAL 1 WEEK ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 WEEK ", $col, $time ), ARRAY_A );
 	$foo['registered']['week'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE `{$time}` > NOW() - INTERVAL 1 MONTH ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 MONTH ", $col, $time ), ARRAY_A );
 	$foo['registered']['month'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM  {$table} WHERE `{$time}` > NOW() - INTERVAL 3 MONTH ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM  {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 3 MONTH ", $col, $time ), ARRAY_A );
 	$foo['registered']['quarter'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	// Active
 
 	$time = 'last_updated';
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE `{$time}` > DATE_SUB(NOW(), INTERVAL 24 HOUR) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > DATE_SUB(NOW(), INTERVAL 24 HOUR) ", $col, $time ), ARRAY_A );
 	$foo['active']['today'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE `{$time}` > NOW() - INTERVAL 1 WEEK ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 WEEK ", $col, $time ), ARRAY_A );
 	$foo['active']['week'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE `{$time}` > NOW() - INTERVAL 1 MONTH ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 MONTH ", $col, $time ), ARRAY_A );
 	$foo['active']['month'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM  {$table} WHERE `{$time}` > NOW() - INTERVAL 3 MONTH ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM  {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 3 MONTH ", $col, $time ), ARRAY_A );
 	$foo['active']['quarter'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	// Spam
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE ( spam = 1 ) AND ( `{$time}` > DATE_SUB(NOW(), INTERVAL 24 HOUR)) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > DATE_SUB(NOW(), INTERVAL 24 HOUR)) ", $col, $time ), ARRAY_A );
 	$foo['spam']['today'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE ( spam = 1 ) AND ( `{$time}` > NOW() - INTERVAL 1 WEEK ) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 WEEK ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['week'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE ( spam = 1 ) AND ( `{$time}` > NOW() - INTERVAL 1 MONTH ) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 MONTH ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['month'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE ( spam = 1 ) AND ( `{$time}` > NOW() - INTERVAL 3 MONTH ) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 3 MONTH ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['quarter'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	return $foo;
@@ -411,45 +396,35 @@ function query_user_stats( $col ) {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$table = "{$wpdb->users}";
 	$time = 'user_registered';
-
-	$foo = array();
+	$foo = [];
 
 	// Registered
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE `{$time}` > DATE_SUB(NOW(), INTERVAL 24 HOUR) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE %s > DATE_SUB(NOW(), INTERVAL 24 HOUR) ", $col, $time ), ARRAY_A );
 	$foo['registered']['today'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE `{$time}` > NOW() - INTERVAL 1 WEEK ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE %s > NOW() - INTERVAL 1 WEEK ", $col, $time ), ARRAY_A );
 	$foo['registered']['week'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE `{$time}` > NOW() - INTERVAL 1 MONTH ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE %s > NOW() - INTERVAL 1 MONTH ", $col, $time ), ARRAY_A );
 	$foo['registered']['month'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM  {$table} WHERE `{$time}` > NOW() - INTERVAL 3 MONTH ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM  {$wpdb->users} WHERE %s > NOW() - INTERVAL 3 MONTH ", $col, $time ), ARRAY_A );
 	$foo['registered']['quarter'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	// Spam
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE ( spam = 1 ) AND ( `{$time}` > DATE_SUB(NOW(), INTERVAL 24 HOUR)) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > DATE_SUB(NOW(), INTERVAL 24 HOUR)) ", $col, $time ), ARRAY_A );
 	$foo['spam']['today'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE ( spam = 1 ) AND ( `{$time}` > NOW() - INTERVAL 1 WEEK ) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 WEEK ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['week'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE ( spam = 1 ) AND ( `{$time}` > NOW() - INTERVAL 1 MONTH ) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 MONTH ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['month'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$sql = "SELECT COUNT($col) AS total FROM {$table} WHERE ( spam = 1 ) AND ( `{$time}` > NOW() - INTERVAL 3 MONTH ) ";
-	$tmp = $wpdb->get_results( $sql, ARRAY_A );
+	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 3 MONTH ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['quarter'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	return $foo;
@@ -467,7 +442,7 @@ function users_with_x_or_more_books( $x ) {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$foo = array();
+	$foo = [];
 
 	$sql = "SELECT {$wpdb->usermeta}.user_id, {$wpdb->users}.user_login AS username, count({$wpdb->usermeta}.meta_key) AS total FROM {$wpdb->usermeta}
 	INNER JOIN {$wpdb->users} ON {$wpdb->usermeta}.user_id = {$wpdb->users}.ID
@@ -482,17 +457,16 @@ function users_with_x_or_more_books( $x ) {
 			$sql = 'SELECT `time` FROM ' . \PressbooksStats\Helpers\get_stats_table() . ' WHERE user_id = ' . absint( $val['user_id'] ) . ' ORDER BY `time` DESC LIMIT 1 ';
 			$tmp2 = $wpdb->get_results( $sql, ARRAY_A );
 
-			$foo[] = array(
+			$foo[] = [
 				'username' => $val['username'],
 				'last_export' => ( isset( $tmp2[0]['time'] ) ? date( 'Y-m-d', strtotime( $tmp2[0]['time'] ) ) : '!' ),
-			);
+			];
 		}
 	}
 
-	$foo = wp_list_sort( $foo, array( 'last_export' => 'DESC' ) );
+	$foo = wp_list_sort( $foo, [ 'last_export' => 'DESC' ] );
 
 	set_transient( $transient, $foo, 60 * 60 * 12 );
 
 	return $foo;
 }
-// @codingStandardsIgnoreEnd

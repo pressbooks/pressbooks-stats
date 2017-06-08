@@ -37,4 +37,9 @@
 		<exclude-pattern>/pressbooks-stats.php</exclude-pattern>
 	</rule>
 
+	<!-- Disable SQL NotPrepared warning for some files -->
+	<rule ref="WordPress.WP.PreparedSQL.NotPrepared">
+		<exclude-pattern>/inc/stats/namespace.php</exclude-pattern>
+	</rule>
+
 </ruleset>
