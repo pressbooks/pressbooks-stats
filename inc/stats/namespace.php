@@ -351,15 +351,6 @@ function query_export_stats( $col ) {
 
 function query_sites_stats( $col ) {
 
-	/**
-	 * wp_blogs
-	 * Deactivate: Flags deleted db field, message is displayed on the front side, can undo
-	 * Archive: Flags archived db field, message is displayed on the front side, can undo
-	 * Spam: Flags spam db field, message is displayed on the front side, can undo
-	 * Delete: Drops tables and rm dirs and files
-	 * User Delete Blog: Drops tables and rm dirs and files
-	 */
-
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
@@ -415,18 +406,6 @@ function query_sites_stats( $col ) {
 
 
 function query_user_stats( $col ) {
-
-	/**
-	 * wp_users
-	 * fields we care about: user_registered, spam, deleted
-	 */
-
-	/**
-	 * wp_usermeta
-	 * a user can have access to more than one blog. There are two elements in the usermeta table to look into:
-	 * 'primary_blog' - As the key_name implies this is the user's primary blog. Will only contain one blog ID.
-	 * A given user may have multiple 'wp_XX_capabilities' rows where 'XX' is the blog ID.
-	 */
 
 	/** @var \wpdb $wpdb */
 	global $wpdb;
