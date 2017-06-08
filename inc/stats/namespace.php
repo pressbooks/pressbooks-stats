@@ -84,10 +84,37 @@ function menu() {
 
 
 /**
+ * @return string
+ */
+function get_admin_page_html_cache_key() {
+	return 'pb_stats_admin_page_html';
+}
+
+
+/**
  * Echo stats dashboard
+ *
+ * @param bool $use_cached_version (optional)
  */
 function display_stats_admin_page() {
 
+	$html = get_site_transient( get_admin_page_html_cache_key() );
+	if ( ! empty( $html ) ) {
+		echo "<!-- CACHED -->{$html}";
+	} else {
+		$html = generate_stats_admin_page();
+		echo $html;
+	}
+}
+
+/**
+ * Generate the stats dashboard
+ *
+ * @return string HTML
+ */
+function generate_stats_admin_page() {
+
+	// Unoptimized SQL ahead!
 	$vars = [
 		'totals' => query_totals(),
 		'books_exported_today' => query_books_exported( '24 HOUR' ),
@@ -102,9 +129,17 @@ function display_stats_admin_page() {
 		'recents' => query_last_100(),
 	];
 
-	echo \PressbooksStats\Helpers\load_template( PB_STATS_PLUGIN_DIR . '/templates/stats.php', $vars );
+	$html = \PressbooksStats\Helpers\load_template( PB_STATS_PLUGIN_DIR . 'templates/stats.php', $vars );
+
+	return $html;
 }
 
+/**
+ * Cache the stats stats dashboard
+ */
+function cache_stats_admin_page() {
+	set_site_transient( get_admin_page_html_cache_key(), generate_stats_admin_page() );
+}
 
 // -------------------------------------------------------------------------------------------------------------------
 // SQL Helpers
@@ -433,12 +468,6 @@ function query_user_stats( $col ) {
 
 function users_with_x_or_more_books( $x ) {
 
-	$transient = "users_with_{$x}_or_more_books";
-	$foo = get_transient( $transient );
-	if ( false !== $foo ) {
-		return $foo; // Return cached copy
-	}
-
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
@@ -465,8 +494,6 @@ function users_with_x_or_more_books( $x ) {
 	}
 
 	$foo = wp_list_sort( $foo, [ 'last_export' => 'DESC' ] );
-
-	set_transient( $transient, $foo, 60 * 60 * 12 );
 
 	return $foo;
 }

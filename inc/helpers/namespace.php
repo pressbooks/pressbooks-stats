@@ -17,15 +17,14 @@ function load_template( $path, array $vars = [] ) {
 		throw new \Exception( "File not found: $path" );
 	}
 
-	ob_start();
 	extract( $vars ); // @codingStandardsIgnoreLine
-	include( $path );
-	$output = ob_get_contents();
-	if ( ob_get_length() ) {
-		ob_end_clean();
-	}
 
-	return $output;
+	if ( is_file( $path ) ) {
+		ob_start();
+		include $path;
+		return ob_get_clean();
+	}
+	return '';
 }
 
 // --------------------------------------------------------------------------------------------------------------------
