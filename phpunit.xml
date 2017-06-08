@@ -16,7 +16,7 @@
 	</testsuites>
 	<filter>
 		<whitelist>
-			<directory suffix=".php">./includes</directory>
+			<directory suffix=".php">./inc</directory>
 		</whitelist>
 	</filter>
 </phpunit>
