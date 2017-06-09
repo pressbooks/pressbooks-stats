@@ -147,8 +147,6 @@ if ( is_plugin_active( 'pressbooks-vip/pressbooks-vip.php' ) ) {
 		</tbody>
 	</table>
 
-	<?php while ( @ob_end_flush() ) {} // @codingStandardsIgnoreLine ?>
-
 	<table>
 		<caption>Users who exported in the last 24h</caption>
 		<thead>

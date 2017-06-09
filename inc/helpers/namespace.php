@@ -11,19 +11,20 @@ namespace PressbooksStats\Helpers;
  * @return string
  * @throws \Exception
  */
-function load_template( $path, array $vars = array() ) {
+function load_template( $path, array $vars = [] ) {
 
 	if ( ! file_exists( $path ) ) {
 		throw new \Exception( "File not found: $path" );
 	}
 
-	ob_start();
 	extract( $vars ); // @codingStandardsIgnoreLine
-	include( $path );
-	$output = ob_get_contents();
-	@ob_end_clean();
 
-	return $output;
+	if ( is_file( $path ) ) {
+		ob_start();
+		include $path;
+		return ob_get_clean();
+	}
+	return '';
 }
 
 // --------------------------------------------------------------------------------------------------------------------
@@ -59,7 +60,7 @@ function install() {
 	$installed_ver = get_option( 'pb_stats_db_version' );
 	$db_version = get_db_version();
 
-	if ( $installed_ver != $db_version ) {
+	if ( $installed_ver !== $db_version ) {
 
 		rename_table();
 
@@ -90,19 +91,19 @@ function rename_table() {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 
-	$oldTableName = 'wp_pressbooks_stats_exports';
+	$old_table_name = 'wp_pressbooks_stats_exports';
 
-	if ( get_stats_table() == $oldTableName ) {
+	if ( get_stats_table() === $old_table_name ) {
 		// The old and new table names are the same, ignore
 		return;
 	}
 
 	// @codingStandardsIgnoreStart
-	$checkIfOldTableExistsSql = "SELECT 1 FROM {$oldTableName} LIMIT 1 ";
+	$checkIfOldTableExistsSql = "SELECT 1 FROM {$old_table_name} LIMIT 1 ";
 	$wpdb->get_results( $checkIfOldTableExistsSql, ARRAY_A );
 	if ( ! $wpdb->last_error ) {
 		// The old hard coded table exists, rename it
-		$renameTableSql = "RENAME TABLE {$oldTableName} TO " . get_stats_table();
+		$renameTableSql = "RENAME TABLE {$old_table_name} TO " . get_stats_table();
 		$wpdb->query( $renameTableSql );
 	}
 	// @codingStandardsIgnoreEnd

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Pressbooks Stats
 Description: Pressbooks plugin which provides some basic activity statistics for a Pressbooks network.
-Version: 1.3.0
+Version: 1.4.0
 Author: BookOven Inc.
 */
 
@@ -10,11 +10,10 @@ Author: BookOven Inc.
 // Check minimum requirements
 // -------------------------------------------------------------------------------------------------------------------
 
-if ( ! function_exists( 'pb_meets_minimum_requirements' ) && ! @include_once( WP_PLUGIN_DIR . '/pressbooks/compatibility.php' ) ) {
-	add_action( 'admin_notices', function () {
+if ( ! function_exists( 'pb_meets_minimum_requirements' ) && ! @include_once( WP_PLUGIN_DIR . '/pressbooks/compatibility.php' ) ) { // @codingStandardsIgnoreLine
+	return add_action( 'admin_notices', function () {
 		echo '<div id="message" class="error fade"><p>' . __( 'Cannot find Pressbooks install.', 'pressbooks-stats' ) . '</p></div>';
 	} );
-	return;
 } elseif ( ! pb_meets_minimum_requirements() ) {
 	return;
 }
@@ -35,30 +34,14 @@ if ( ! defined( 'PB_STATS_PLUGIN_URL' ) ) {
 // Class autoloader
 // -------------------------------------------------------------------------------------------------------------------
 
-function _pressbooks_stats_autoload( $class_name ) {
-
-	$prefix = 'PressbooksStats\\';
-	$len = strlen( $prefix );
-	if ( strncmp( $prefix, $class_name, $len ) !== 0 ) {
-		// Ignore classes not in our namespace
-		return;
-	}
-
-	$parts = explode( '\\', strtolower( $class_name ) );
-	array_shift( $parts );
-	$class_file = 'class-pb-' . str_replace( '_', '-', array_pop( $parts ) ) . '.php';
-	$path = count( $parts ) ? implode( '/', $parts ) . '/' : '';
-	require( PB_STATS_PLUGIN_DIR . 'includes/' . $path . $class_file );
-}
-
-spl_autoload_register( '_pressbooks_stats_autoload' );
+\HM\Autoloader\register_class_path( 'PressbooksStats', __DIR__ . '/inc' );
 
 // -------------------------------------------------------------------------------------------------------------------
 // Requires
 // -------------------------------------------------------------------------------------------------------------------
 
-require( PB_STATS_PLUGIN_DIR . 'includes/pb-helpers.php' );
-require( PB_STATS_PLUGIN_DIR . 'includes/pb-stats.php' );
+require( PB_STATS_PLUGIN_DIR . 'inc/helpers/namespace.php' );
+require( PB_STATS_PLUGIN_DIR . 'inc/stats/namespace.php' );
 
 // -------------------------------------------------------------------------------------------------------------------
 // Hooks
