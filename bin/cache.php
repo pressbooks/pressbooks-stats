@@ -1,7 +1,8 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	die( "Run this script with WP-CLI: `wp eval-file bin/cache.php` \n" );
+if ( ! defined( 'WP_CLI' ) ) {
+	$script_name = basename( $argv[0] );
+	die( "Run this script with WP-CLI: `wp eval-file bin/$script_name` \n" );
 }
 
 set_time_limit( 0 );
