@@ -5,6 +5,13 @@
 
 A Pressbooks plugin which provides some basic activity statistics for a Pressbooks network.
 
+## Composer
+
+From within your WordPress or Bedrock root directory, run:
+
+`composer require pressbooks/pressbooks-stats`
+
+
 ## Caching
 
 To cache stats for a network, run (with [wp-cli](https://wp-cli.org)): `wp eval-file bin/cache.php`. You can set up a cron job for this if you want.
