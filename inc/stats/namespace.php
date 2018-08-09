@@ -96,8 +96,6 @@ function get_admin_page_html_cache_key() {
 
 /**
  * Echo stats dashboard
- *
- * @param bool $use_cached_version (optional)
  */
 function display_stats_admin_page() {
 

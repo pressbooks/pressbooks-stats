@@ -9,12 +9,11 @@ namespace PressbooksStats\Helpers;
  * @param array $vars (optional)
  *
  * @return string
- * @throws \Exception
  */
 function load_template( $path, array $vars = [] ) {
 
 	if ( ! file_exists( $path ) ) {
-		throw new \Exception( "File not found: $path" );
+		throw new \LogicException( "File not found: $path" );
 	}
 
 	extract( $vars ); // @codingStandardsIgnoreLine
