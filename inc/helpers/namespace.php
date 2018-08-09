@@ -97,13 +97,11 @@ function rename_table() {
 		return;
 	}
 
-	// @codingStandardsIgnoreStart
-	$checkIfOldTableExistsSql = "SELECT 1 FROM {$old_table_name} LIMIT 1 ";
-	$wpdb->get_results( $checkIfOldTableExistsSql, ARRAY_A );
+	$check_if_old_table_exists_sql = "SELECT 1 FROM {$old_table_name} LIMIT 1 ";
+	$wpdb->get_results( $check_if_old_table_exists_sql, ARRAY_A );
 	if ( ! $wpdb->last_error ) {
 		// The old hard coded table exists, rename it
-		$renameTableSql = "RENAME TABLE {$old_table_name} TO " . get_stats_table();
-		$wpdb->query( $renameTableSql );
+		$rename_table_sql = "RENAME TABLE {$old_table_name} TO " . get_stats_table();
+		$wpdb->query( $rename_table_sql );
 	}
-	// @codingStandardsIgnoreEnd
 }

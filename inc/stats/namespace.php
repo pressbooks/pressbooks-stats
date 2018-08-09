@@ -20,8 +20,8 @@ function track_export( $export_type ) {
 			'time' => date( 'Y-m-d H:i:s' ),
 			'export_type' => $export_type,
 			'theme' => '' . wp_get_theme(), // Stringify by appending to empty string
-
-		], [ '%d', '%d', '%s', '%s', '%s' ]
+		],
+		[ '%d', '%d', '%s', '%s', '%s' ]
 	);
 }
 
