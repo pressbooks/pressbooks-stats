@@ -20,8 +20,8 @@ function track_export( $export_type ) {
 			'time' => date( 'Y-m-d H:i:s' ),
 			'export_type' => $export_type,
 			'theme' => '' . wp_get_theme(), // Stringify by appending to empty string
-
-		], [ '%d', '%d', '%s', '%s', '%s' ]
+		],
+		[ '%d', '%d', '%s', '%s', '%s' ]
 	);
 }
 
@@ -65,19 +65,22 @@ function menu() {
 			'manage_network',
 			'pb_stats',
 			__NAMESPACE__ . '\display_stats_admin_page',
-		'dashicons-chart-pie' );
+			'dashicons-chart-pie'
+		);
 
-		add_action( 'admin_enqueue_scripts', function ( $hook ) use ( $page ) {
+		add_action(
+			'admin_enqueue_scripts', function ( $hook ) use ( $page ) {
 
-			if ( $hook === $page ) {
-				wp_enqueue_script( 'pb-vip-stats-1' );
-				wp_enqueue_style( 'pb-vip-stats-2' );
-				wp_enqueue_style( 'pb-vip-stats-3' );
-				wp_enqueue_style( 'pb-vip-stats-4' );
-				wp_enqueue_script( 'pb-vip-stats-5' );
-				wp_enqueue_style( 'pb-vip-stats-6' );
+				if ( $hook === $page ) {
+					wp_enqueue_script( 'pb-vip-stats-1' );
+					wp_enqueue_style( 'pb-vip-stats-2' );
+					wp_enqueue_style( 'pb-vip-stats-3' );
+					wp_enqueue_style( 'pb-vip-stats-4' );
+					wp_enqueue_script( 'pb-vip-stats-5' );
+					wp_enqueue_style( 'pb-vip-stats-6' );
+				}
 			}
-		} );
+		);
 	}
 
 }
@@ -93,8 +96,6 @@ function get_admin_page_html_cache_key() {
 
 /**
  * Echo stats dashboard
- *
- * @param bool $use_cached_version (optional)
  */
 function display_stats_admin_page() {
 
