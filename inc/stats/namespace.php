@@ -65,19 +65,22 @@ function menu() {
 			'manage_network',
 			'pb_stats',
 			__NAMESPACE__ . '\display_stats_admin_page',
-		'dashicons-chart-pie' );
+			'dashicons-chart-pie'
+		);
 
-		add_action( 'admin_enqueue_scripts', function ( $hook ) use ( $page ) {
+		add_action(
+			'admin_enqueue_scripts', function ( $hook ) use ( $page ) {
 
-			if ( $hook === $page ) {
-				wp_enqueue_script( 'pb-vip-stats-1' );
-				wp_enqueue_style( 'pb-vip-stats-2' );
-				wp_enqueue_style( 'pb-vip-stats-3' );
-				wp_enqueue_style( 'pb-vip-stats-4' );
-				wp_enqueue_script( 'pb-vip-stats-5' );
-				wp_enqueue_style( 'pb-vip-stats-6' );
+				if ( $hook === $page ) {
+					wp_enqueue_script( 'pb-vip-stats-1' );
+					wp_enqueue_style( 'pb-vip-stats-2' );
+					wp_enqueue_style( 'pb-vip-stats-3' );
+					wp_enqueue_style( 'pb-vip-stats-4' );
+					wp_enqueue_script( 'pb-vip-stats-5' );
+					wp_enqueue_style( 'pb-vip-stats-6' );
+				}
 			}
-		} );
+		);
 	}
 
 }
