@@ -2,6 +2,8 @@
 
 namespace PressbooksStats\Stats;
 
+use function Pressbooks\Utility\format_bytes;
+
 /**
  * WP hook for our very own pressbooks_track_export action
  *
@@ -476,4 +478,13 @@ function users_with_x_or_more_books( $x ) {
 	$foo = wp_list_sort( $foo, [ 'last_export' => 'DESC' ] );
 
 	return $foo;
+}
+
+function display_network_storage() {
+	$storage = get_site_transient( 'pb_stats_network_storage' );
+	if ( empty( $storage ) ) {
+		$storage = format_bytes( recurse_dirsize( wp_upload_dir()['basedir'] ) );
+		set_site_transient( 'pb_stats_network_storage', $storage, DAY_IN_SECONDS );
+	}
+	printf( '<p>%1$s: %2$s</p>', __( 'Network Storage', 'pressbooks-stats' ), $storage );
 }
