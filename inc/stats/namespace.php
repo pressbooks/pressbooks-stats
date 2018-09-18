@@ -482,9 +482,24 @@ function users_with_x_or_more_books( $x ) {
 
 function display_network_storage() {
 	$storage = get_site_transient( 'pb_stats_network_storage' );
-	if ( empty( $storage ) ) {
-		$storage = format_bytes( recurse_dirsize( wp_upload_dir()['basedir'] ) );
-		set_site_transient( 'pb_stats_network_storage', $storage, DAY_IN_SECONDS );
+	if ( ! empty( $storage ) ) {
+		$cached = '<!-- CACHED -->';
+	} else {
+		$cached = '';
+		$storage = calculate_network_storage();
 	}
-	printf( '<p>%1$s: %2$s</p>', __( 'Network Storage', 'pressbooks-stats' ), $storage );
+	printf( '%1$s<p>%2$s: %3$s</p>', $cached, __( 'Network Storage', 'pressbooks-stats' ), $storage );
+}
+
+function calculate_network_storage() {
+	$path = wp_upload_dir()['basedir'];
+	$storage = format_bytes ( rtrim( str_replace( $path, '', `du -b -s $path` ) ) );
+	return $storage;
+}
+
+/**
+ * Cache the network storage level
+ */
+function cache_network_storage() {
+	set_site_transient( 'pb_stats_network_storage', calculate_network_storage() );
 }
