@@ -17,6 +17,12 @@ To cache stats for a network, run (with [wp-cli](https://wp-cli.org)): `wp eval-
 
 ## Changelog
 
+### 1.6.1
+
+#### Patches
+
+- Handle symlinked directories when displaying network storage: [#13](https://github.com/pressbooks/pressbooks-stats/pull/13)
+
 ### 1.6.0
 
 #### Minor Changes
