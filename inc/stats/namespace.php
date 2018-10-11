@@ -492,8 +492,9 @@ function display_network_storage() {
 }
 
 function calculate_network_storage() {
-	$path = wp_upload_dir()['basedir'];
-	$storage = format_bytes( rtrim( str_replace( $path, '', `du -b -s $path` ) ) );
+	$path = realpath( wp_upload_dir()['basedir'] );
+	$output = exec( sprintf( 'du -b -s %s', escapeshellarg( $path ) ) );
+	$storage = format_bytes( rtrim( str_replace( $path, '', $output ) ) );
 	return $storage;
 }
 
