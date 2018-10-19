@@ -117,24 +117,28 @@ function display_stats_admin_page() {
  */
 function generate_stats_admin_page() {
 
-	// Unoptimized SQL ahead!
-	$vars = [
-		'totals' => query_totals(),
-		'books_exported_today' => query_books_exported( '24 HOUR' ),
-		'users_exported_today' => query_users_exported( '24 HOUR' ),
-		'books_exported_month' => query_books_exported( '1 MONTH', true ),
-		'users_exported_month' => query_users_exported( '1 MONTH', true ),
-		'users_with_5_or_more_books' => users_with_x_or_more_books( 5 ),
-		'sites' => query_sites_stats( 'blog_id' ),
-		'users' => query_user_stats( 'ID' ),
-		'export_types' => query_export_stats( 'export_type' ),
-		'export_themes' => query_export_stats( 'theme' ),
-		'recents' => query_last_100(),
-	];
+	if ( ! get_transient( 'pb_stats_generating_admin_page' ) ) {
+		set_transient( 'pb_stats_generating_admin_page', 1, 5 * MINUTE_IN_SECONDS );
+		// Unoptimized SQL ahead!
+		$vars = [
+			'totals' => query_totals(),
+			'books_exported_today' => query_books_exported( '24 HOUR' ),
+			'users_exported_today' => query_users_exported( '24 HOUR' ),
+			'books_exported_month' => query_books_exported( '1 MONTH', true ),
+			'users_exported_month' => query_users_exported( '1 MONTH', true ),
+			'users_with_5_or_more_books' => users_with_x_or_more_books( 5 ),
+			'sites' => query_sites_stats( 'blog_id' ),
+			'users' => query_user_stats( 'ID' ),
+			'export_types' => query_export_stats( 'export_type' ),
+			'export_themes' => query_export_stats( 'theme' ),
+			'recents' => query_last_100(),
+		];
 
-	$html = \PressbooksStats\Helpers\load_template( PB_STATS_PLUGIN_DIR . 'templates/stats.php', $vars );
-
-	return $html;
+		$html = \PressbooksStats\Helpers\load_template( PB_STATS_PLUGIN_DIR . 'templates/stats.php', $vars );
+		delete_transient( 'pb_stats_generating_admin_page' );
+		return $html;
+	}
+	return __( 'Calculating stats&hellip;', 'pressbooks-stats' );
 }
 
 /**
@@ -492,10 +496,15 @@ function display_network_storage() {
 }
 
 function calculate_network_storage() {
-	$path = realpath( wp_upload_dir()['basedir'] );
-	$output = exec( sprintf( 'du -b -s %s', escapeshellarg( $path ) ) );
-	$storage = format_bytes( rtrim( str_replace( $path, '', $output ) ) );
-	return $storage;
+	if ( ! get_transient( 'pb_stats_calculating_network_storage' ) ) {
+		set_transient( 'pb_stats_calculating_network_storage', 1, 5 * MINUTE_IN_SECONDS );
+		$path = realpath( wp_upload_dir()['basedir'] );
+		$output = exec( sprintf( 'du -b -s %s', escapeshellarg( $path ) ) );
+		$storage = format_bytes( rtrim( str_replace( $path, '', $output ) ) );
+		delete_transient( 'pb_stats_calculating_network_storage' );
+		return $storage;
+	}
+	return __( 'Calculating storage&hellip;', 'pressbooks-stats' );
 }
 
 /**
