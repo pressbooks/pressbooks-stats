@@ -24,7 +24,7 @@ if ( empty( $html ) ) {
 }
 
 // Network storage
-if ( ! defined( 'PB_DISABLE_NETWORK_STORAGE' ) ) {
+if ( ! defined( 'PB_DISABLE_NETWORK_STORAGE' ) || ! PB_DISABLE_NETWORK_STORAGE ) {
 	$cache_key = 'pb_stats_network_storage';
 
 	delete_site_transient( $cache_key );
