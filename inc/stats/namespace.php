@@ -484,8 +484,16 @@ function users_with_x_or_more_books( $x ) {
 	return $foo;
 }
 
+/**
+ * @return string
+ */
+function get_network_storage_cache_key() {
+	return 'pb_stats_network_storage';
+}
+
+
 function display_network_storage() {
-	$storage = get_site_transient( 'pb_stats_network_storage' );
+	$storage = get_site_transient( get_network_storage_cache_key() );
 	if ( ! empty( $storage ) ) {
 		$cached = '<!-- CACHED -->';
 	} else {
@@ -511,5 +519,5 @@ function calculate_network_storage() {
  * Cache the network storage level
  */
 function cache_network_storage() {
-	set_site_transient( 'pb_stats_network_storage', calculate_network_storage() );
+	set_site_transient( get_network_storage_cache_key(), calculate_network_storage() );
 }
