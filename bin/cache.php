@@ -24,17 +24,18 @@ if ( empty( $html ) ) {
 }
 
 // Network storage
+if ( ! defined( 'PB_DISABLE_NETWORK_STORAGE' ) || ! PB_DISABLE_NETWORK_STORAGE ) {
+	$cache_key = 'pb_stats_network_storage';
 
-$cache_key = 'pb_stats_network_storage';
+	delete_site_transient( $cache_key );
 
-delete_site_transient( $cache_key );
+	\PressbooksStats\Stats\cache_network_storage();
 
-\PressbooksStats\Stats\cache_network_storage();
+	$storage = get_site_transient( $cache_key );
 
-$storage = get_site_transient( $cache_key );
-
-if ( empty( $storage ) ) {
-	echo "Failed to cache network storage data... \n";
-} else {
-	echo "Successfully cached network storage data! \n";
+	if ( empty( $storage ) ) {
+		echo "Failed to cache network storage data... \n";
+	} else {
+		echo "Successfully cached network storage data! \n";
+	}
 }

@@ -60,4 +60,6 @@ register_activation_hook( __FILE__, '\PressbooksStats\Helpers\install' );
 add_action( 'pressbooks_track_export', '\PressbooksStats\Stats\track_export' );
 add_action( 'admin_init', '\PressbooksStats\Stats\init_css_js' );
 add_action( 'network_admin_menu', '\PressbooksStats\Stats\menu' );
-add_action( 'mu_rightnow_end', '\PressbooksStats\Stats\display_network_storage' );
+if ( ! defined( 'PB_DISABLE_NETWORK_STORAGE' ) || ! PB_DISABLE_NETWORK_STORAGE ) {
+	add_action( 'mu_rightnow_end', '\PressbooksStats\Stats\display_network_storage' );
+}
