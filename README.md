@@ -17,6 +17,13 @@ To cache stats for a network, run (with [wp-cli](https://wp-cli.org)): `wp eval-
 
 ## Changelog
 
+### 1.6.2
+
+#### Patches
+
+- Prevent cache stampedes: [#17](https://github.com/pressbooks/pressbooks-stats/pull/17)
+- Add PB_DISABLE_NETWORK_STORAGE constant: [#18](https://github.com/pressbooks/pressbooks-stats/pull/17)
+
 ### 1.6.1
 
 #### Patches
