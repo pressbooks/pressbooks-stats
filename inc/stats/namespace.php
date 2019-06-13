@@ -366,46 +366,46 @@ function query_sites_stats( $col ) {
 
 	// Registered
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > DATE_SUB(NOW(), INTERVAL 24 HOUR) ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > DATE_SUB(NOW(), INTERVAL 24 HOUR) ", $col, $time ), ARRAY_A );
 	$foo['registered']['today'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 WEEK ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 WEEK ", $col, $time ), ARRAY_A );
 	$foo['registered']['week'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 MONTH ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 MONTH ", $col, $time ), ARRAY_A );
 	$foo['registered']['month'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM  {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 3 MONTH ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM  {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 3 MONTH ", $col, $time ), ARRAY_A );
 	$foo['registered']['quarter'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	// Active
 
 	$time = 'last_updated';
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > DATE_SUB(NOW(), INTERVAL 24 HOUR) ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > DATE_SUB(NOW(), INTERVAL 24 HOUR) ", $col, $time ), ARRAY_A );
 	$foo['active']['today'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 WEEK ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 WEEK ", $col, $time ), ARRAY_A );
 	$foo['active']['week'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 MONTH ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 1 MONTH ", $col, $time ), ARRAY_A );
 	$foo['active']['month'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM  {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 3 MONTH ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM  {$wpdb->blogs} WHERE %s > NOW() - INTERVAL 3 MONTH ", $col, $time ), ARRAY_A );
 	$foo['active']['quarter'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	// Spam
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > DATE_SUB(NOW(), INTERVAL 24 HOUR)) ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > DATE_SUB(NOW(), INTERVAL 24 HOUR)) ", $col, $time ), ARRAY_A );
 	$foo['spam']['today'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 WEEK ) ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 WEEK ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['week'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 MONTH ) ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 MONTH ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['month'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 3 MONTH ) ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->blogs} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 3 MONTH ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['quarter'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	return $foo;
@@ -422,30 +422,30 @@ function query_user_stats( $col ) {
 
 	// Registered
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE %s > DATE_SUB(NOW(), INTERVAL 24 HOUR) ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE %s > DATE_SUB(NOW(), INTERVAL 24 HOUR) ", $col, $time ), ARRAY_A );
 	$foo['registered']['today'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE %s > NOW() - INTERVAL 1 WEEK ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE %s > NOW() - INTERVAL 1 WEEK ", $col, $time ), ARRAY_A );
 	$foo['registered']['week'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE %s > NOW() - INTERVAL 1 MONTH ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE %s > NOW() - INTERVAL 1 MONTH ", $col, $time ), ARRAY_A );
 	$foo['registered']['month'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM  {$wpdb->users} WHERE %s > NOW() - INTERVAL 3 MONTH ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE %s > NOW() - INTERVAL 3 MONTH ", $col, $time ), ARRAY_A );
 	$foo['registered']['quarter'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	// Spam
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > DATE_SUB(NOW(), INTERVAL 24 HOUR)) ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > DATE_SUB(NOW(), INTERVAL 24 HOUR)) ", $col, $time ), ARRAY_A );
 	$foo['spam']['today'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 WEEK ) ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 WEEK ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['week'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 MONTH ) ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 1 MONTH ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['month'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
-	$tmp = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 3 MONTH ) ", $col, $time ), ARRAY_A );
+	$tmp = $wpdb->get_results( sprintf( "SELECT COUNT(%s) AS total FROM {$wpdb->users} WHERE ( spam = 1 ) AND ( %s > NOW() - INTERVAL 3 MONTH ) ", $col, $time ), ARRAY_A );
 	$foo['spam']['quarter'] = isset( $tmp[0]['total'] ) ? $tmp[0]['total'] : 0;
 
 	return $foo;
