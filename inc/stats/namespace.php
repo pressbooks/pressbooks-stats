@@ -496,11 +496,8 @@ function display_network_storage() {
 	$storage = get_site_transient( get_network_storage_cache_key() );
 	if ( ! empty( $storage ) ) {
 		$cached = '<!-- CACHED -->';
-	} else {
-		$cached = '';
-		$storage = calculate_network_storage();
-	}
-	printf( '%1$s<p>%2$s: %3$s</p>', $cached, __( 'Network Storage', 'pressbooks-stats' ), $storage );
+		printf( '%1$s<p>%2$s: %3$s</p>', $cached, __( 'Network Storage', 'pressbooks-stats' ), $storage );
+	} 
 }
 
 function calculate_network_storage() {
