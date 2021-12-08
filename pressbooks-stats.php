@@ -2,8 +2,8 @@
 /*
 Plugin Name: Pressbooks Stats
 Description: Pressbooks plugin which provides some basic activity statistics for a Pressbooks network.
-Version: 1.6.3
-Pressbooks tested up to: 5.8.3
+Version: 1.6.4
+Pressbooks tested up to: 5.30.0
 Author: Pressbooks (Book Oven Inc.)
 Author URI: https://pressbooks.org
 Network: True
