@@ -1,7 +1,7 @@
 name: CI workflow
 on:
   push:
-    branches: [ dev, main ]
+    branches: [ dev, master ]
     tags:
       - '*.*.*'
   pull_request:
