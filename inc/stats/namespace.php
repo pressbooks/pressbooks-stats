@@ -27,7 +27,6 @@ function track_export( $export_type ) {
 	);
 }
 
-
 /**
  * Register graphic libraries and css
  */
@@ -41,7 +40,6 @@ function init_css_js() {
 	wp_register_script( 'pb-vip-stats-5', PB_STATS_PLUGIN_URL . 'assets/js/graphs.js', [ 'pb-vip-stats-1' ], '20130718' );
 	wp_register_style( 'pb-vip-stats-6', PB_STATS_PLUGIN_URL . 'assets/css/stats.css', [], '20130718' );
 }
-
 
 /**
  * Add a top level menu item
@@ -87,14 +85,12 @@ function menu() {
 
 }
 
-
 /**
  * @return string
  */
 function get_admin_page_html_cache_key() {
 	return 'pb_stats_admin_page_html';
 }
-
 
 /**
  * Echo stats dashboard
@@ -181,7 +177,6 @@ function query_totals() {
 	return $foo;
 }
 
-
 function query_last_100() {
 
 	/** @var \wpdb $wpdb */
@@ -213,7 +208,6 @@ function query_last_100() {
 
 	return $foo;
 }
-
 
 function query_books_exported( $interval, $just_the_count = false ) {
 
@@ -294,7 +288,6 @@ function query_users_exported( $interval, $just_the_count = false ) {
 
 }
 
-
 function query_export_stats( $col ) {
 
 	/** @var \wpdb $wpdb */
@@ -355,7 +348,6 @@ function query_export_stats( $col ) {
 	return $bar;
 }
 
-
 function query_sites_stats( $col ) {
 
 	/** @var \wpdb $wpdb */
@@ -411,7 +403,6 @@ function query_sites_stats( $col ) {
 	return $foo;
 }
 
-
 function query_user_stats( $col ) {
 
 	/** @var \wpdb $wpdb */
@@ -450,7 +441,6 @@ function query_user_stats( $col ) {
 
 	return $foo;
 }
-
 
 function users_with_x_or_more_books( $x ) {
 
@@ -491,13 +481,12 @@ function get_network_storage_cache_key() {
 	return 'pb_stats_network_storage';
 }
 
-
 function display_network_storage() {
 	$storage = get_site_transient( get_network_storage_cache_key() );
 	if ( ! empty( $storage ) ) {
 		$cached = '<!-- CACHED -->';
 		printf( '%1$s<p>%2$s: %3$s</p>', $cached, __( 'Network Storage', 'pressbooks-stats' ), $storage );
-	} 
+	}
 }
 
 function calculate_network_storage() {
