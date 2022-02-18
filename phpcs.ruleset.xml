@@ -18,4 +18,7 @@
 	<rule ref="HM.Functions.NamespacedFunctions.MissingNamespace">
 		<exclude-pattern>/pressbooks-stats.php</exclude-pattern>
 	</rule>
+	<!-- Run against the PHPCompatibility ruleset -->
+	<rule ref="PHPCompatibility"/>
+	<config name="testVersion" value="7.3-7.4"/>
 </ruleset>
