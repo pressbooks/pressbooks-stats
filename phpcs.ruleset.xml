@@ -3,7 +3,10 @@
 	<!-- Use Pressbooks Coding Standards -->
 	<rule ref="vendor/pressbooks/coding-standards">
 		<!-- Disable rules Pressbooks Stats disagrees with -->
-		<exclude name="WordPress.WP.PreparedSQL.NotPrepared"/>
+		<exclude name="WordPress.DB.PreparedSQL.NotPrepared"/>
+		<exclude name="Squiz.Commenting"/>
+		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
+		<exclude name="Pressbooks.Security.EscapeOutput"/>
 	</rule>
 	<rule ref="PSR1.Methods.CamelCapsMethodName">
 		<!-- Exclude classes that override WP Core -->
@@ -15,4 +18,7 @@
 	<rule ref="HM.Functions.NamespacedFunctions.MissingNamespace">
 		<exclude-pattern>/pressbooks-stats.php</exclude-pattern>
 	</rule>
+	<!-- Run against the PHPCompatibility ruleset -->
+	<rule ref="PHPCompatibility"/>
+	<config name="testVersion" value="7.3-7.4"/>
 </ruleset>

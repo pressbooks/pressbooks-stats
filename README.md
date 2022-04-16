@@ -15,14 +15,14 @@ From within your WordPress or Bedrock root directory, run:
 
 To cache stats for a network, run (with [wp-cli](https://wp-cli.org)): `wp eval-file bin/cache.php`. You can set up a cron job for this if you want.
 
-## Changelog 
+## Changelog
 
-### 1.6.3 
+### 1.6.4
 
-* See: https://github.com/pressbooks/pressbooks-stats/releases/tag/1.6.3
+* See: https://github.com/pressbooks/pressbooks-stats/releases/tag/1.6.4
 * Full release history available at: https://github.com/pressbooks/pressbooks-stats/releases
 
-## Upgrade Notice 
+## Upgrade Notice
 
-### 1.6.3 
+### 1.6.3
 * Pressbooks Stats requires Pressbooks >= 5.8.3
