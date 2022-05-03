@@ -17,12 +17,11 @@ To cache stats for a network, run (with [wp-cli](https://wp-cli.org)): `wp eval-
 
 ## Changelog
 
-### 1.6.4
+### 1.6.5
 
-* See: https://github.com/pressbooks/pressbooks-stats/releases/tag/1.6.4
+* See: https://github.com/pressbooks/pressbooks-stats/releases/tag/1.6.5
 * Full release history available at: https://github.com/pressbooks/pressbooks-stats/releases
 
 ## Upgrade Notice
-
-### 1.6.3
-* Pressbooks Stats requires Pressbooks >= 5.8.3
+### 1.6.5
+* Pressbooks Stats requires Pressbooks >= 5.34.1
