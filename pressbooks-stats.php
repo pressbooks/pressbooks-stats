@@ -2,6 +2,8 @@
 /*
 Plugin Name: Pressbooks Stats
 Description: Pressbooks plugin which provides some basic activity statistics for a Pressbooks network.
+Requires at least: 6.5
+Requires Plugins: pressbooks
 Version: 1.9.0
 Pressbooks tested up to: 6.9.0
 Author: Pressbooks (Book Oven Inc.)
@@ -9,20 +11,6 @@ Author URI: https://pressbooks.org
 Network: True
 License: GPL v3 or later
 */
-
-// -------------------------------------------------------------------------------------------------------------------
-// Check minimum requirements
-// -------------------------------------------------------------------------------------------------------------------
-
-if ( ! function_exists( 'pb_meets_minimum_requirements' ) && ! @include_once( WP_PLUGIN_DIR . '/pressbooks/compatibility.php' ) ) { // @codingStandardsIgnoreLine
-	return add_action(
-		'admin_notices', function () {
-			echo '<div id="message" class="error fade"><p>' . __( 'Cannot find Pressbooks install.', 'pressbooks-stats' ) . '</p></div>';
-		}
-	);
-} elseif ( ! pb_meets_minimum_requirements() ) {
-	return;
-}
 
 // -------------------------------------------------------------------------------------------------------------------
 // Setup some defaults
