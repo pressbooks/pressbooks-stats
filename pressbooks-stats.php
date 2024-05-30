@@ -1,16 +1,22 @@
 <?php
-/*
-Plugin Name: Pressbooks Stats
-Description: Pressbooks plugin which provides some basic activity statistics for a Pressbooks network.
-Requires at least: 6.5
-Requires Plugins: pressbooks
-Version: 1.10.0
-Pressbooks tested up to: 6.18.0
-Author: Pressbooks (Book Oven Inc.)
-Author URI: https://pressbooks.org
-Network: True
-License: GPL v3 or later
-*/
+/**
+ * Plugin Name: Pressbooks Stats
+ * Description: Pressbooks plugin which provides some basic activity statistics for a Pressbooks network.
+ * Requires at least: WordPress 6.5
+ * Requires Plugins: pressbooks
+ * x-release-please-start-version
+ * Version: 1.10.0
+ * x-release-please-end
+ * Pressbooks tested up to: 6.18.0
+ * Author: Pressbooks (Book Oven Inc.)
+ * Author URI: https://pressbooks.org
+ * Network: True
+ * License: GPL v3 or later
+ *
+ * @package Pressbooks_Stats
+ * @author Pressbooks (Book Oven Inc.)
+ * @license GPL-3.0-or-later
+ */
 
 // -------------------------------------------------------------------------------------------------------------------
 // Setup some defaults
