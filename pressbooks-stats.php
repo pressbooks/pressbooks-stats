@@ -57,3 +57,7 @@ add_action( 'network_admin_menu', '\PressbooksStats\Stats\menu' );
 if ( ! defined( 'PB_DISABLE_NETWORK_STORAGE' ) || ! PB_DISABLE_NETWORK_STORAGE ) {
 	add_action( 'mu_rightnow_end', '\PressbooksStats\Stats\display_network_storage' );
 }
+
+add_action('init', function () {
+	load_plugin_textdomain( 'pressbooks-stats', false, 'pressbooks-stats/languages' );
+});
