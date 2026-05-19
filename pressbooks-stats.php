@@ -10,6 +10,8 @@
  * Pressbooks tested up to: 6.18.0
  * Author: Pressbooks (Book Oven Inc.)
  * Author URI: https://pressbooks.org
+ * Text Domain: pressbooks-stats
+ * Domain Path: /languages
  * Network: True
  * License: GPL v3 or later
  *
