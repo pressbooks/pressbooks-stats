@@ -10,6 +10,8 @@
  * Pressbooks tested up to: 6.18.0
  * Author: Pressbooks (Book Oven Inc.)
  * Author URI: https://pressbooks.org
+ * Text Domain: pressbooks-stats
+ * Domain Path: /languages
  * Network: True
  * License: GPL v3 or later
  *
@@ -57,3 +59,7 @@ add_action( 'network_admin_menu', '\PressbooksStats\Stats\menu' );
 if ( ! defined( 'PB_DISABLE_NETWORK_STORAGE' ) || ! PB_DISABLE_NETWORK_STORAGE ) {
 	add_action( 'mu_rightnow_end', '\PressbooksStats\Stats\display_network_storage' );
 }
+
+add_action('init', function () {
+	load_plugin_textdomain( 'pressbooks-stats', false, 'pressbooks-stats/languages' );
+});
