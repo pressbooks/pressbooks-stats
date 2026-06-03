@@ -5,7 +5,7 @@
  * Requires at least: WordPress 6.5
  * Requires Plugins: pressbooks
  * x-release-please-start-version
- * Version: 1.10.1
+ * Version: 1.11.0
  * x-release-please-end
  * Pressbooks tested up to: 6.18.0
  * Author: Pressbooks (Book Oven Inc.)
